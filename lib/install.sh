@@ -33,6 +33,14 @@ case "${1:-help}" in
     fi
     pong=$(run_redis PING || true)
     [[ "$pong" == "PONG" ]] || fail "PING failed against $URL"
+    # Surface the live runtime config so a Dockerfile/redis.conf
+    # drift is visible at verify time. Config changes baked into
+    # redis.conf only take effect on container restart — see
+    # docker compose restart redis.
+    for cfg in bind protected-mode requirepass; do
+      val=$(run_redis CONFIG GET "$cfg" | tail -1 || true)
+      log "config $cfg = ${val:-<unset>}"
+    done
     log "verify ok"
     ;;
   status)
