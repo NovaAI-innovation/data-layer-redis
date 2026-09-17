@@ -26,7 +26,7 @@ COPY redis.conf /usr/local/etc/redis/redis.conf
 
 # Make the data dir writable by redis user (already is in the base image,
 # but be explicit so future maintainers don't break it).
-RUN chown -R redis:redis /data
+RUN chown -R valkey:valkey /data
 
 # Default port (overridden by docker-compose / run flags when needed).
 EXPOSE 6379
